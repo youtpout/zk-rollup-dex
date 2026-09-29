@@ -12,7 +12,7 @@
 
 use alloy_sol_types::SolType;
 use clap::{Parser, ValueEnum};
-use fibonacci_lib::PublicValuesStruct;
+use dex_lib::PublicValuesStruct;
 use serde::{Deserialize, Serialize};
 use sp1_sdk::{
     blocking::{ProveRequest, Prover, ProverClient},
@@ -21,7 +21,7 @@ use sp1_sdk::{
 use std::path::PathBuf;
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
-const FIBONACCI_ELF: Elf = include_elf!("fibonacci-program");
+const DEX_ELF: Elf = include_elf!("dex-program");
 
 /// The arguments for the EVM command.
 #[derive(Parser, Debug)]
@@ -63,7 +63,7 @@ fn main() {
     let client = ProverClient::from_env();
 
     // Setup the program.
-    let pk = client.setup(FIBONACCI_ELF).expect("failed to setup elf");
+    let pk = client.setup(DEX_ELF).expect("failed to setup elf");
 
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();

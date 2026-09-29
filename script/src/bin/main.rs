@@ -12,14 +12,14 @@
 
 use alloy_sol_types::SolType;
 use clap::Parser;
-use fibonacci_lib::PublicValuesStruct;
+use dex_lib::PublicValuesStruct;
 use sp1_sdk::{
     blocking::{ProveRequest, Prover, ProverClient},
     include_elf, Elf, ProvingKey, SP1Stdin,
 };
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
-const FIBONACCI_ELF: Elf = include_elf!("fibonacci-program");
+const DEX_ELF: Elf = include_elf!("dex-program");
 
 /// The arguments for the command.
 #[derive(Parser, Debug)]
@@ -59,7 +59,7 @@ fn main() {
 
     if args.execute {
         // Execute the program
-        let (output, report) = client.execute(FIBONACCI_ELF, stdin).run().unwrap();
+        let (output, report) = client.execute(DEX_ELF, stdin).run().unwrap();
         println!("Program executed successfully.");
 
         // Read the output.
@@ -69,7 +69,7 @@ fn main() {
         println!("a: {}", a);
         println!("b: {}", b);
 
-        let (expected_a, expected_b) = fibonacci_lib::fibonacci(n);
+        let (expected_a, expected_b) = dex_lib::fibonacci(n);
         assert_eq!(a, expected_a);
         assert_eq!(b, expected_b);
         println!("Values are correct!");
@@ -78,7 +78,7 @@ fn main() {
         println!("Number of cycles: {}", report.total_instruction_count());
     } else {
         // Setup the program for proving.
-        let pk = client.setup(FIBONACCI_ELF).expect("failed to setup elf");
+        let pk = client.setup(DEX_ELF).expect("failed to setup elf");
 
         // Generate the proof
         let proof = client
